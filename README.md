@@ -4,7 +4,9 @@ this is for the dde modjam woahhh!!!! the best one every anyone who says otherwi
 
 if play mod you are good - brady
 
-follow twitter for updates plz: https://twitter.com/placeholderfnf?s=21
+check out youtube for updates and other projects: https://www.youtube.com/channel/UCTbcDsGx74vUaoQawEe48gg
+
+<img width="613" height="322" alt="PLACEHOLDER" src="https://github.com/user-attachments/assets/ad4ffa77-8841-4e03-a36c-8aea58a65b6e" />
 
 ![68cda7426a900](https://github.com/user-attachments/assets/d9feb366-3eca-49dd-9de0-8a3d20db4355)
 
