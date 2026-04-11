@@ -159,8 +159,6 @@ class Main extends Sprite
 		ClientPrefs.loadDefaultKeys();
 		addChild(new FlxGame(game.width, game.height, game.initialState, game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
-		flixel.FlxG.plugins.add(new flixel.addons.plugin.ScreenShotPlugin());
-
 		#if !mobile
 		fpsVar = new FPSCounter(0, 0, 0xFFFFFF);
 		addChild(fpsVar);

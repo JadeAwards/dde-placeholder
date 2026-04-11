@@ -1,49 +1,49 @@
 {
 	"animations": [
 		{
-			"offsets": [0, 0],
 			"loop": false,
-			"fps": 12,
+			"offsets": [0, 0],
 			"anim": "idle",
-			"indices": [],
-			"name": "scrapped idle"
+			"fps": 12,
+			"name": "scrapped idle",
+			"indices": []
 		},
 		{
-			"offsets": [0, 0],
 			"loop": false,
-			"fps": 12,
+			"offsets": [0, 0],
 			"anim": "singDOWN",
-			"indices": [],
-			"name": "scrapped down"
+			"fps": 12,
+			"name": "scrapped down",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [0, 0],
-			"loop": false,
-			"fps": 12,
 			"anim": "singUP",
-			"indices": [],
-			"name": "scrapped up"
+			"fps": 12,
+			"name": "scrapped up",
+			"indices": []
 		},
 		{
-			"loop": false,
 			"offsets": [2, -1],
-			"anim": "singLEFT",
+			"loop": false,
 			"fps": 12,
-			"name": "scrapped right",
-			"indices": []
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "scrapped right"
 		},
 		{
-			"loop": false,
 			"offsets": [-3, 0],
-			"anim": "singRIGHT",
+			"loop": false,
 			"fps": 12,
-			"name": "scrapped left",
-			"indices": []
+			"anim": "singRIGHT",
+			"indices": [],
+			"name": "scrapped left"
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
-	"image": "characters/scrapped",
+	"image": "characters/placeholder/scrapped",
 	"position": [-280, -40],
 	"healthicon": "face",
 	"flip_x": false,

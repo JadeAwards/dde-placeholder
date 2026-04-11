@@ -1,23 +1,23 @@
 {
 	"camera_boyfriend": [
-		150,
-		112
+		0,
+		-38
 	],
 	"_editorMeta": {
 		"boyfriend": "boy",
 		"gf": "gf",
 		"dad": "placeholderdude"
 	},
+	"stageUI": "normal",
+	"boyfriend": [
+		900,
+		80
+	],
 	"girlfriend": [
 		400,
 		130
 	],
-	"stageUI": "normal",
-	"boyfriend": [
-		730,
-		-60
-	],
-	"defaultZoom": 1.4,
+	"defaultZoom": 1.5,
 	"objects": [
 		{
 			"x": 238,
@@ -107,7 +107,7 @@
 	"camera_speed": 10,
 	"hide_girlfriend": true,
 	"camera_opponent": [
-		165,
-		-60
+		115,
+		-50
 	]
 }

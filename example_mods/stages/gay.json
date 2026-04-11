@@ -1,22 +1,22 @@
 {
 	"camera_boyfriend": [
-		112,
-		300
+		-190,
+		-40
 	],
 	"_editorMeta": {
 		"boyfriend": "pissfriend",
-		"gf": "gfhot",
-		"dad": "FUCKHEAD"
+		"dad": "FUCKHEAD",
+		"gf": "gfhot"
 	},
+	"boyfriend": [
+		1000,
+		50
+	],
 	"girlfriend": [
 		680,
 		-30
 	],
 	"stageUI": "normal",
-	"boyfriend": [
-		710,
-		-220
-	],
 	"defaultZoom": 1.5,
 	"objects": [
 		{
@@ -64,22 +64,22 @@
 			"alpha": 1,
 			"animations": [
 				{
-					"offsets": null,
 					"loop": true,
-					"fps": 12,
+					"offsets": null,
 					"anim": "idle",
-					"indices": [],
-					"name": "gayfloor idle"
+					"fps": 12,
+					"name": "gayfloor idle",
+					"indices": []
 				}
 			],
 			"type": "animatedSprite"
 		},
 		{
-			"x": 718,
-			"y": 295,
+			"x": 368,
+			"y": 200,
 			"scale": [
-				1,
-				1
+				0.8,
+				0.8
 			],
 			"image": "Sun",
 			"flipX": false,
@@ -97,18 +97,15 @@
 			"alpha": 1,
 			"animations": [
 				{
-					"offsets": null,
-					"indices": [],
-					"fps": 12,
-					"anim": "idle",
 					"loop": true,
-					"name": "sun"
+					"offsets": null,
+					"anim": "idle",
+					"fps": 12,
+					"name": "sun",
+					"indices": []
 				}
 			],
 			"type": "animatedSprite"
-		},
-		{
-			"type": "gf"
 		},
 		{
 			"x": 552,
@@ -133,12 +130,12 @@
 			"alpha": 1,
 			"animations": [
 				{
-					"offsets": null,
 					"loop": true,
-					"fps": 12,
+					"offsets": null,
 					"anim": "idle",
-					"indices": [],
-					"name": "hungling2 eatatakirun"
+					"fps": 12,
+					"name": "hungling2 eatatakirun",
+					"indices": []
 				}
 			],
 			"type": "animatedSprite"
@@ -166,12 +163,12 @@
 			"alpha": 1,
 			"animations": [
 				{
-					"offsets": null,
 					"loop": true,
-					"fps": 12,
+					"offsets": null,
 					"anim": "idle",
-					"indices": [],
-					"name": "hungling1 jump"
+					"fps": 12,
+					"name": "hungling1 jump",
+					"indices": []
 				}
 			],
 			"type": "animatedSprite"
@@ -199,15 +196,18 @@
 			"alpha": 1,
 			"animations": [
 				{
-					"offsets": null,
-					"indices": [],
-					"fps": 12,
-					"anim": "idle",
 					"loop": true,
-					"name": "Jungry"
+					"offsets": null,
+					"anim": "idle",
+					"fps": 12,
+					"name": "Jungry",
+					"indices": []
 				}
 			],
 			"type": "animatedSprite"
+		},
+		{
+			"type": "gf"
 		},
 		{
 			"type": "dad"
@@ -220,15 +220,15 @@
 		0,
 		0
 	],
+	"camera_speed": 10,
+	"directory": "",
 	"opponent": [
 		360,
 		55
 	],
-	"directory": "",
-	"camera_speed": 10,
-	"hide_girlfriend": false,
 	"camera_opponent": [
-		250,
+		255,
 		0
-	]
+	],
+	"hide_girlfriend": false
 }

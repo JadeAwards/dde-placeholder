@@ -1,13 +1,16 @@
-<?xml version='1.0' encoding='utf-8'?>
-<TextureAtlas imagePath="gayfloor.png">
-<SubTexture name="gayfloor idle0000" x="0" y="0" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
-<SubTexture name="gayfloor idle0001" x="0" y="248" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
-<SubTexture name="gayfloor idle0002" x="0" y="496" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
-<SubTexture name="gayfloor idle0003" x="0" y="744" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
-<SubTexture name="gayfloor idle0004" x="1028" y="0" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
-<SubTexture name="gayfloor idle0005" x="1028" y="248" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
-<SubTexture name="gayfloor idle0006" x="1028" y="496" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
-<SubTexture name="gayfloor idle0007" x="1028" y="744" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
-<SubTexture name="gayfloor idle0008" x="0" y="992" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
-<SubTexture name="gayfloor idle0009" x="1028" y="992" width="1028" height="248" frameX="0" frameY="-476" frameWidth="1028" frameHeight="724" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="gayfloor.png" width="1030" height="2509">
+	<SubTexture name="gayfloor idle0000" x="1" y="1" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
+	<SubTexture name="gayfloor idle0001" x="1" y="252" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
+	<SubTexture name="gayfloor idle0002" x="1" y="503" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
+	<SubTexture name="gayfloor idle0003" x="1" y="754" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
+	<SubTexture name="gayfloor idle0004" x="1" y="1005" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
+	<SubTexture name="gayfloor idle0005" x="1" y="1256" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
+	<SubTexture name="gayfloor idle0006" x="1" y="1507" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
+	<SubTexture name="gayfloor idle0007" x="1" y="1758" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
+	<SubTexture name="gayfloor idle0008" x="1" y="2009" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
+	<SubTexture name="gayfloor idle0009" x="1" y="2260" width="1028" height="248" frameX="-0" frameY="-476" frameWidth="1028" frameHeight="724"/>
 </TextureAtlas>

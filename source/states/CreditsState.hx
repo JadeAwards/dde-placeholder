@@ -4,6 +4,7 @@ import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.util.FlxColor;
+import flixel.util.FlxSpriteUtil;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -28,33 +29,39 @@ class CreditsState extends MusicBeatState
 	var popupBG:FlxSprite;
 	var popupBox:FlxSprite;
 	var popupTitle:FlxText;
-	var popupText:FlxText;
+	var popupTxt:FlxText;
 	var popupDesc:FlxText;
 	var popupSocials:Array<FlxText> = [];
-	var closeButton:FlxText;
+	var closeBtn:FlxText;
 	var popupVisible:Bool = false;
+
+	var blackTrans:FlxSprite;
+	var transitioning:Bool = false;
 
 	override public function create():Void
 	{
 		super.create();
 
-		FlxG.cameras.bgColor = FlxColor.BLACK;
 		FlxG.mouse.visible = true;
+
+		FlxG.cameras.bgColor = FlxColor.BLACK;
+
+		persistentUpdate = persistentDraw = true;
 
 		entries = [
 			{
 				path: "credits/2arryy_",
 				name: "2arryy_",
-				credit: "Composer",
+				credit: "Composer, Animator",
 				socials: ["https://www.youtube.com/@2aRRyy"],
-				description: "hello i'm 2arry from friday night funkin' and i made music for ts mod, and uhh bf sprites in placeholder"
+				description: "hello i'm 2arry from friday night funkin' and i made music for ts mod, and uhh bf sprs in placeholder"
 			},
 			{
-				path: "credits/jade",
+				path: "credits/jadeawards",
 				name: "JadeAwards",
-				credit: "Programmer, Artist",
-				socials: ["https://www.youtube.com/@jadeawards", "https://x.com/jadeaward_s"],
-				description: "Hello everyone! Hoping you guys liked the mod and had fun playing it. I'm glad to be a part of this team with my wonderful friends and have fun doing I know best for this mod! (*cough, programming, cough*)\n\n\nThank you for playing!"
+				credit: "Coder, Artist",
+				socials: ["https://www.youtube.com/@jadeawards"],
+				description: "hello everyone! hoping you guys liked the mod and had fun playing it. i'm glad to be a part of this team with my wonderful friends and have fun doing i know best for this mod! (*cough, programming, cough*)\n\n\nthank you for playing!"
 			},
 			{
 				path: "credits/melonman",
@@ -76,31 +83,31 @@ class CreditsState extends MusicBeatState
 			{
 				path: "credits/tanrake",
 				name: "tanrake",
-				credit: "Artist",
+				credit: "Co-Director, Animator",
 				socials: ["https://www.youtube.com/@tangerinelmao", "https://www.tiktok.com/@tanrakev2"],
 				description: "yo i did most of the art! it was stressful but rlly fun to make. thank you left for giving me the opportunity to join the mod! tchau :3"
 			},
 			{
-				path: "credits/adam",
-				name: "adamusique",
-				credit: "Artist, Charter",
+				path: "credits/eve",
+				name: "eve",
+				credit: "Animator, Charter",
 				socials: [
-					"https://www.youtube.com/@adamusiqueuuh",
+					"https://www.youtube.com/@Adamusiqu3",
 					"https://steamcommunity.com/id/Adamusique/"
 				],
-				description: "Sup guys its me adam\n\nI do art\n\nAnd i love source engine\n\nj'aime la merde"
+				description: "Sup guys its me eve\n\nI do art\n\nAnd i love source engine\n\nj'aime la merde"
 			},
 			{
 				path: "credits/thebigleft",
 				name: "TheBigLeft",
-				credit: "Director, Artist",
+				credit: "Director, Animator",
 				socials: ["https://x.com/ReatlL"],
 				description: "Buuuuurps\n\nyea im the director and main artist or something ehhh\n\nim the true villain of this game HAHAHAHAHAHAHAHAHAHA\n\ncollect my pages"
 			},
 			{
 				path: "credits/milk_with_rice",
 				name: "Milk_With_Rice",
-				credit: "Guest Composer",
+				credit: "Composer",
 				socials: ["https://www.youtube.com/@MilkWithRice"],
 				description: "the residencial guy"
 			}
@@ -108,17 +115,17 @@ class CreditsState extends MusicBeatState
 
 		for (entry in entries)
 		{
-			var sprite = new FlxSprite();
-			sprite.loadGraphic(Paths.image(entry.path));
-			sprite.x = FlxG.random.float(0, FlxG.width - sprite.width);
-			sprite.y = FlxG.random.float(0, FlxG.height - sprite.height);
-			add(sprite);
-			images.push(sprite);
+			var spr = new FlxSprite();
+			spr.loadGraphic(Paths.image(entry.path));
+			spr.x = FlxG.random.float(0, FlxG.width - spr.width);
+			spr.y = FlxG.random.float(0, FlxG.height - spr.height);
+			add(spr);
+			images.push(spr);
 
-			var label = new FlxText(0, 0, sprite.width, entry.name, 12);
+			var label = new FlxText(0, 0, spr.width, entry.name, 12);
 			label.setFormat(Paths.font('upheavtt.ttf'), 12, FlxColor.WHITE, "center");
-			label.x = sprite.x;
-			label.y = sprite.y + sprite.height + 2;
+			label.x = spr.x;
+			label.y = spr.y + spr.height + 2;
 			add(label);
 			labels.push(label);
 
@@ -129,14 +136,14 @@ class CreditsState extends MusicBeatState
 		}
 
 		popupBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		popupBG.alpha = 0.6;
+		popupBG.alpha = 0.8;
 		popupBG.visible = false;
 		add(popupBG);
 
 		popupBox = new FlxSprite(Std.int(FlxG.width / 6),
-			Std.int(FlxG.height / 6)).makeGraphic(Std.int(FlxG.width * 2 / 3), Std.int(FlxG.height * 2 / 3), FlxColor.GRAY);
+			Std.int(FlxG.height / 6)).makeGraphic(Std.int(FlxG.width * 2 / 3), Std.int(FlxG.height * 2 / 3), FlxColor.TRANSPARENT);
+		FlxSpriteUtil.drawRoundRect(popupBox, 0, 0, popupBox.width, popupBox.height, 40, 40, 0xFF212121, {thickness: 4, color: FlxColor.YELLOW});
 		popupBox.visible = false;
-		popupBox.alpha = 0.7;
 		add(popupBox);
 
 		popupTitle = new FlxText(popupBox.x, popupBox.y + 20, popupBox.width, "", 24);
@@ -144,66 +151,85 @@ class CreditsState extends MusicBeatState
 		popupTitle.visible = false;
 		add(popupTitle);
 
-		popupText = new FlxText(popupBox.x + 20, popupBox.y + 70, popupBox.width - 40, "", 16);
-		popupText.setFormat(Paths.font('upheavtt.ttf'), 16, FlxColor.WHITE, "center");
-		popupText.visible = false;
-		add(popupText);
+		popupTxt = new FlxText(popupBox.x + 40, popupBox.y + 70, popupBox.width - 80, "", 18);
+		popupTxt.setFormat(Paths.font('upheavtt.ttf'), 18, 0xFFCCCCCC, "center");
+		popupTxt.visible = false;
+		add(popupTxt);
 
-		popupDesc = new FlxText(popupBox.x + 20, popupBox.y + 110, popupBox.width - 40, "", 16);
+		popupDesc = new FlxText(popupBox.x + 40, popupBox.y + 110, popupBox.width - 80, "", 16);
 		popupDesc.setFormat(Paths.font('upheavtt.ttf'), 16, FlxColor.WHITE, "center");
 		popupDesc.visible = false;
 		add(popupDesc);
 
-		closeButton = new FlxText(0, 0, 40, "X", 20);
-		closeButton.setFormat(Paths.font('upheavtt.ttf'), 20, FlxColor.WHITE, "center");
-		closeButton.color = FlxColor.RED;
-		closeButton.visible = false;
-		add(closeButton);
+		closeBtn = new FlxText(0, 0, 40, "X", 20);
+		closeBtn.setFormat(Paths.font('upheavtt.ttf'), 20, FlxColor.WHITE, "center");
+		closeBtn.color = FlxColor.RED;
+		closeBtn.visible = false;
+		add(closeBtn);
+
+		blackTrans = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		blackTrans.alpha = 1;
+		add(blackTrans);
+
+		FlxTween.tween(blackTrans, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
+	}
+
+	function startTrans(nextState:FlxState):Void
+	{
+		if (transitioning)
+			return;
+
+		transitioning = true;
+		FlxTween.tween(blackTrans, {alpha: 1}, 0.5, {ease: FlxEase.quadIn, onComplete: function(_) FlxG.switchState(nextState)});
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
-		if (FlxG.keys.justPressed.ESCAPE)
+		if (FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE)
 		{
 			if (popupVisible)
 				hidePopup();
 			else
-				MusicBeatState.switchState(new MainMenuState());
+			{
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				startTrans(new MainMenuState());
+			}
 		}
 
 		if (!popupVisible)
 		{
 			for (i in 0...images.length)
 			{
-				var sprite = images[i];
+				var spr = images[i];
 				var label = labels[i];
 				var vel = velocities[i];
 
-				sprite.x += vel.x;
-				sprite.y += vel.y;
-				label.x = sprite.x;
-				label.y = sprite.y + sprite.height + 2;
+				spr.x += vel.x;
+				spr.y += vel.y;
+				label.x = spr.x;
+				label.y = spr.y + spr.height + 2;
 
-				if (sprite.x < 0 || sprite.x + sprite.width > FlxG.width)
+				if (spr.x < 0 || spr.x + spr.width > FlxG.width)
 				{
 					vel.x *= -1;
-					sprite.x = Math.max(0, Math.min(FlxG.width - sprite.width, sprite.x));
+					spr.x = Math.max(0, Math.min(FlxG.width - spr.width, spr.x));
 				}
-				if (sprite.y < 0 || sprite.y + sprite.height > FlxG.height)
+				if (spr.y < 0 || spr.y + spr.height > FlxG.height)
 				{
 					vel.y *= -1;
-					sprite.y = Math.max(0, Math.min(FlxG.height - sprite.height, sprite.y));
+					spr.y = Math.max(0, Math.min(FlxG.height - spr.height, spr.y));
 				}
 
-				if (FlxG.mouse.overlaps(sprite) || FlxG.mouse.overlaps(label))
-					sprite.color = FlxColor.GRAY;
+				if (FlxG.mouse.overlaps(spr) || FlxG.mouse.overlaps(label))
+					spr.color = FlxColor.GRAY;
 				else
-					sprite.color = FlxColor.WHITE;
+					spr.color = FlxColor.WHITE;
 
-				if (FlxG.mouse.justPressed && (FlxG.mouse.overlaps(sprite) || FlxG.mouse.overlaps(label)))
+				if (FlxG.mouse.justPressed && (FlxG.mouse.overlaps(spr) || FlxG.mouse.overlaps(label)))
 				{
+					FlxG.sound.play(Paths.sound('confirmMenu'));
 					showPopup(entries[i]);
 				}
 			}
@@ -216,8 +242,11 @@ class CreditsState extends MusicBeatState
 					FlxG.openURL(s.text);
 			}
 
-			if (FlxG.mouse.justPressed && FlxG.mouse.overlaps(closeButton))
+			if (FlxG.mouse.justPressed && FlxG.mouse.overlaps(closeBtn))
+			{
+				FlxG.sound.play(Paths.sound('cancelMenu'));
 				hidePopup();
+			}
 		}
 	}
 
@@ -231,17 +260,17 @@ class CreditsState extends MusicBeatState
 		}):Void
 	{
 		popupTitle.text = entry.name;
-		popupText.text = entry.credit;
+		popupTxt.text = entry.credit;
 		popupDesc.text = entry.description;
 
 		for (s in popupSocials)
 			remove(s);
 		popupSocials = [];
 
-		var startY = popupBox.y + popupBox.height - 80;
+		var startY = popupBox.y + popupBox.height - 100;
 		for (i in 0...entry.socials.length)
 		{
-			var social = new FlxText(popupBox.x + 20, startY + i * 22, popupBox.width - 40, entry.socials[i], 16);
+			var social = new FlxText(popupBox.x + 40, startY + i * 22, popupBox.width - 80, entry.socials[i], 16);
 			social.setFormat(Paths.font('upheavtt.ttf'), 16, FlxColor.CYAN, "center");
 			add(social);
 			popupSocials.push(social);
@@ -250,17 +279,14 @@ class CreditsState extends MusicBeatState
 		popupBG.visible = true;
 		popupBox.visible = true;
 		popupTitle.visible = true;
-		popupText.visible = true;
+		popupTxt.visible = true;
 		popupDesc.visible = true;
 		for (s in popupSocials)
 			s.visible = true;
 
-		closeButton.x = popupBox.x + popupBox.width - closeButton.width - 5;
-		closeButton.y = popupBox.y + 5;
-		closeButton.visible = true;
-
-		popupBox.scale.set(0, 0);
-		FlxTween.tween(popupBox.scale, {x: 1, y: 1}, 0.6, {ease: FlxEase.elasticOut});
+		closeBtn.x = popupBox.x + popupBox.width - closeBtn.width - 25;
+		closeBtn.y = popupBox.y + 10;
+		closeBtn.visible = true;
 
 		popupVisible = true;
 	}
@@ -270,11 +296,11 @@ class CreditsState extends MusicBeatState
 		popupBG.visible = false;
 		popupBox.visible = false;
 		popupTitle.visible = false;
-		popupText.visible = false;
+		popupTxt.visible = false;
 		popupDesc.visible = false;
 		for (s in popupSocials)
 			s.visible = false;
-		closeButton.visible = false;
+		closeBtn.visible = false;
 		popupVisible = false;
 	}
 }

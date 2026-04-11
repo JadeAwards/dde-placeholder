@@ -1,12 +1,36 @@
+local placeConfig = {
+    defaultCamZoom = 1.5,
+    ['dadGroup.x'] = 285,
+    ['dadGroup.y'] = 75,
+    ['boyfriendGroup.x'] = 900,
+    ['boyfriendGroup.y'] = 80,
+    ['opponentCameraOffset'] = {115, -50},
+    ['boyfriendCameraOffset'] = {0, -38},
+    ['cameraSpeed'] = 10,
+    ['gf.visible'] = false
+}
+
+local scrappedConfig = {
+    defaultCamZoom = 0.8,
+    ['dadGroup.x'] = 735,
+    ['dadGroup.y'] = 140,
+    ['boyfriendGroup.x'] = 910,
+    ['boyfriendGroup.y'] = 320,
+    ['opponentCameraOffset'] = {13, 141},
+    ['boyfriendCameraOffset'] = {110, 275},
+    ['cameraSpeed'] = 10,
+    ['gf.visible'] = false
+}
+
 local circles = {}
 local circleSpeed = 200
-local circleBopAmount = 0.2
+local circleBopAmt = 0.2
 local circleBopTime = 0.1
 local circleBopNextBeat = 4
 
-local circleScroll = {}
-local circleScrollSpeed = 200
-local circleScrollWidth = 1529
+local circleScr = {}
+local circleScrSpeed = 200
+local circleScrWidth = 1529
 
 local function safeSet(prop, val)
     pcall(function()
@@ -15,6 +39,7 @@ local function safeSet(prop, val)
 end
 
 local function applyStageConfig(cfg)
+    if not cfg then return end
     for prop, val in pairs(cfg) do
         if type(val) == "table" then
             safeSet(prop .. "[0]", val[1])
@@ -46,6 +71,7 @@ local function buildCircles()
     makeLuaSprite(id, 'fuckingcircle', x, y)
     scaleObject(id, size, size)
     setObjectCamera(id, 'game')
+    setProperty(id .. '.antialiasing', false)
     addLuaSprite(id, false)
     setObjectOrder(id, dadOrder - 1)
 
@@ -74,7 +100,7 @@ local function updateCircles(elapsed)
 
         if c.bopTimer > 0 then
             c.bopTimer = c.bopTimer - elapsed
-            local scale = 1 + circleBopAmount * (c.bopTimer / circleBopTime)
+            local scale = 1 + circleBopAmt * (c.bopTimer / circleBopTime)
             setProperty(c.propScaleX, c.scaleX * scale)
             setProperty(c.propScaleY, c.scaleY * scale)
         end
@@ -82,51 +108,52 @@ local function updateCircles(elapsed)
 end
 
 local function buildCircleScroll()
-    circleScroll = clearList(circleScroll)
+    circleScr = clearList(circleScr)
     local dadOrder = getObjectOrder('dadGroup') or 1
 
     for i = 0, 1 do
-        local id = 'circleScroll' .. i
-        makeLuaSprite(id, 'fuckingcirclescroll', i * circleScrollWidth, 0)
+        local id = 'circleScr' .. i
+        makeLuaSprite(id, 'fuckingcirclescroll', i * circleScrWidth, 0)
         setObjectCamera(id, 'hud')
+        setProperty(id .. '.antialiasing', false)
         addLuaSprite(id, true)
         setObjectOrder(id, dadOrder - 1)
 
         local scroll = {
             id = id,
-            x = i * circleScrollWidth,
+            x = i * circleScrWidth,
             bopTimer = 0
         }
         scroll.propX = id .. ".x"
         scroll.propScaleX = id .. ".scale.x"
         scroll.propScaleY = id .. ".scale.y"
 
-        table.insert(circleScroll, scroll)
+        table.insert(circleScr, scroll)
     end
 end
 
 local function updateCircleScroll(elapsed)
     local minX
-    for _, c in ipairs(circleScroll) do
-        c.x = c.x + circleScrollSpeed * elapsed
+    for _, c in ipairs(circleScr) do
+        c.x = c.x + circleScrSpeed * elapsed
     end
 
     minX = math.huge
-    for _, c in ipairs(circleScroll) do
+    for _, c in ipairs(circleScr) do
         if c.x < minX then
             minX = c.x
         end
     end
 
-    for _, c in ipairs(circleScroll) do
-        if c.x >= circleScrollWidth then
-            c.x = minX - circleScrollWidth
+    for _, c in ipairs(circleScr) do
+        if c.x >= circleScrWidth then
+            c.x = minX - circleScrWidth
         end
         setProperty(c.propX, c.x)
 
         if c.bopTimer > 0 then
             c.bopTimer = c.bopTimer - elapsed
-            local scale = 1 + circleBopAmount * (c.bopTimer / circleBopTime)
+            local scale = 1 + circleBopAmt * (c.bopTimer / circleBopTime)
             setProperty(c.propScaleX, scale)
             setProperty(c.propScaleY, scale)
         end
@@ -135,32 +162,20 @@ end
 
 local function buildStage(stage)
     clearSprites({'scrapped', 'place', 'fuckingchair'})
-    circles, circleScroll = clearList(circles), clearList(circleScroll)
+    circles, circleScr = clearList(circles), clearList(circleScr)
 
     if stage == 'scrapped' then
         makeAnimatedLuaSprite('scrapped', 'bgscrapped', -82, 19)
         addAnimationByPrefix('scrapped', 'idle', 'bgscrapped idle', 12, true)
         objectPlayAnimation('scrapped', 'idle', true)
         setScrollFactor('scrapped', 1, 1)
-        setProperty('scrapped.antialiasing', true)
+        setProperty('scrapped.antialiasing', false)
         addLuaSprite('scrapped', false)
         local dadOrder = getObjectOrder('dadGroup')
         if dadOrder then
             setObjectOrder('scrapped', dadOrder - 1)
         end
-        applyStageConfig({
-            ["gfGroup.x"] = 400,
-            ["gfGroup.y"] = 130,
-            ["gfGroup.alpha"] = 0,
-            ["dadGroup.x"] = 735,
-            ["dadGroup.y"] = 140,
-            ["boyfriendGroup.x"] = 910,
-            ["boyfriendGroup.y"] = 320,
-            opponentCameraOffset = {14, 152},
-            boyfriendCameraOffset = {102, 275},
-            girlfriendCameraOffset = {0, 0},
-            defaultCamZoom = 0.8
-        })
+        applyStageConfig(scrappedConfig)
     elseif stage == 'place' then
         makeAnimatedLuaSprite('place', 'place', 238, 245)
         addAnimationByPrefix('place', 'idle', 'place idle', 12, true)
@@ -184,19 +199,7 @@ local function buildStage(stage)
             buildCircleScroll()
         end
 
-        applyStageConfig({
-            ["gfGroup.x"] = 400,
-            ["gfGroup.y"] = 130,
-            ["gfGroup.alpha"] = 0,
-            ["dadGroup.x"] = 285,
-            ["dadGroup.y"] = 75,
-            ["boyfriendGroup.x"] = 730,
-            ["boyfriendGroup.y"] = -60,
-            opponentCameraOffset = {165, -60},
-            boyfriendCameraOffset = {150, 112},
-            girlfriendCameraOffset = {0, 0},
-            defaultCamZoom = 1.4
-        })
+        applyStageConfig(placeConfig)
     end
 end
 
@@ -204,10 +207,11 @@ function onCreate()
     math.randomseed(os.time())
     buildStage('place')
 
-    makeLuaSprite('evilImage', 'theevilfuckingimage', 0, 0)
-    setObjectCamera('evilImage', 'hud')
-    scaleObject('evilImage', 1.25, 1.25)
-    addLuaSprite('evilImage', true)
+    makeLuaSprite('evilImg', 'theevilfuckingimage', 0, 0)
+    setObjectCamera('evilImg', 'hud')
+    scaleObject('evilImg', 1.25, 1.25)
+    setProperty('evilImg.antialiasing', false)
+    addLuaSprite('evilImg', true)
 
     makeLuaSprite('blackOverlay', '', 0, 0)
     makeGraphic('blackOverlay', 1280, 720, '000000')
@@ -221,11 +225,14 @@ function onCreate()
     setObjectCamera('placeholderTxt', 'hud')
     screenCenter('placeholderTxt', 'x')
     setProperty('placeholderTxt.alpha', 0)
+    setProperty('placeholderTxt.scale.x', 0)
+    setProperty('placeholderTxt.scale.y', 0)
+    setProperty('placeholderTxt.antialiasing', false)
     addLuaText('placeholderTxt')
 end
 
 function onSongStart()
-    fadeOverlay(0, 12)
+    doTweenAlpha('black', 'blackOverlay', 0, 12, 'linear')
 end
 
 function onUpdate(elapsed)
@@ -242,64 +249,64 @@ function onBeatHit()
 end
 
 function onStepHit()
-    if curStep == 87 then
-        doTweenAngle('evilImageTweenAngle', 'evilImage', 360, 8, 'quartInOut')
-        doTweenY('evilImageTweenY', 'evilImage', 1400, 6, 'quartInOut')
-    elseif curStep == 100 then
-        screenCenter('placeholderTxt', 'xy')
-        setProperty('placeholderTxt.alpha', 1)
-        doTweenX('placeholderTxtXScale', 'placeholderTxt.scale', 1.13, 1.2, 'elasticOut');
-        doTweenY('placeholderTxtYScale', 'placeholderTxt.scale', 1.13, 1.2, 'elasticOut');
-        runTimer('dropPlaceholder', 1)
-    elseif curStep == 256 then
+    if (curStep == 384) then
+        doTweenAlpha('black', 'blackOverlay', 0, 0.5, 'linear')
+        cameraFlash('game', 'FFFFFF', 1, true)
+        doTweenZoom('zoomOut', 'camGame', 1.5, 0.7, 'cubeOut')
+
         for _, c in ipairs(circles) do
-            c.speedX = c.speedX * 2.5
+            c.speedX = c.speedX * 2
         end
         circleBopNextBeat = 1
-    elseif curStep == 374 then
-        fadeOverlay(0.4, 0.9)
-        zoomCamera(1.9, 2)
-    elseif curStep == 384 then
-        fadeOverlay(0, 0.7)
-        zoomCamera(1.4, 1)
+    end
+
+    if curStep == 87 then
+        doTweenAngle('evilImgTweenAngle', 'evilImg', 360, 8, 'quartInOut')
+        doTweenY('evilImgTweenY', 'evilImg', 1400, 6, 'quartInOut')
+    elseif curStep == 96 then
+        screenCenter('placeholderTxt', 'xy')
+        doTweenAlpha('placeholderAlpha', 'placeholderTxt', 1, 0.4, 'quartOut')
+        doTweenX('placeholderTxtXScale', 'placeholderTxt.scale', 1.1, 1.2, 'elasticOut');
+        doTweenY('placeholderTxtYScale', 'placeholderTxt.scale', 1.1, 1.2, 'elasticOut');
+        runTimer('dropTxt', 1.8)
+    elseif curStep == 251 then
+        doTweenAlpha('black', 'blackOverlay', 0.6, 0.4, 'linear')
+        doTweenZoom('zoomIn', 'camGame', 2, 0.4, 'linear')
+    elseif curStep == 256 or curStep == 640 then
+        doTweenAlpha('black', 'blackOverlay', 0, 0.5, 'linear')
+        doTweenZoom('zoomOut', 'camGame', 1.5, 0.7, 'cubeOut')
+        cameraFlash('game', 'FFFFFF', 1, true)
+    elseif curStep == 376 then
+        doTweenAlpha('black', 'blackOverlay', 0.6, 0.6, 'linear')
+        doTweenZoom('zoomIn', 'camGame', 2, 0.6, 'linear')
     elseif curStep == 512 then
-        fadeOverlay(0.4, 0.9)
-        zoomCamera(2, 12)
-    elseif curStep == 640 then
+        doTweenAlpha('black', 'blackOverlay', 0.6, 0.6, 'linear')
+    elseif curStep == 560 or curStep == 566 or curStep == 572 or curStep == 576 or curStep == 624 or curStep == 630 or curStep == 636 or curStep == 640 then
+        cameraFlash('game', 'FFFFFF', 0.5, true)
+    elseif curStep == 896 then
+        doTweenAlpha('black', 'blackOverlay', 0.6, 0.6, 'linear')
         for _, c in ipairs(circles) do
-            c.speedX = c.speedX / 2.5
+            c.speedX = c.speedX
         end
         circleBopNextBeat = 4
-        fadeOverlay(0, 0.7)
-        zoomCamera(1.4, 1)
-    elseif curStep == 896 then
-        fadeOverlay(0.4, 2)
     elseif curStep == 1152 then
-        fadeOverlay(0, 0.01)
-        cameraFlash('game', 'FFFFFF', 0.5, true)
+        doTweenAlpha('black', 'blackOverlay', 0, 0.5, 'linear')
+        cameraFlash('game', 'FFFFFF', 1, true)
         buildStage('scrapped')
     elseif curStep == 1408 then
-        cameraFlash('game', 'FFFFFF', 0.5, true)
+        cameraFlash('game', 'FFFFFF', 1, true)
         buildStage('place')
+        setProperty('defaultCamZoom', 1.5)
+        doTweenZoom('zoomOut', 'camGame', 1.5, 0.7, 'cubeOut')
     elseif curStep == 1664 then
-        fadeOverlay(1, 15)
+        cameraFlash('game', 'FFFFFF', 1, true)
+        doTweenAlpha('black', 'blackOverlay', 1, 15, 'linear')
     end
 end
 
 function onTimerCompleted(tag)
-    if tag == 'dropPlaceholder' then
+    if tag == 'dropTxt' then
         doTweenAngle('placeholderDropAngle', 'placeholderTxt', 360, 4, 'quartInOut')
         doTweenY('placeholderDropTweenY', 'placeholderTxt', 1400, 3, 'quartInOut')
-    end
-end
-
-function fadeOverlay(targetAlpha, duration)
-    doTweenAlpha('fadeBlack', 'blackOverlay', targetAlpha, duration, 'linear')
-end
-
-function zoomCamera(zoomLevel, holdTime)
-    setProperty('defaultCamZoom', zoomLevel)
-    if holdTime and holdTime > 0 then
-        runTimer('zoomHold', holdTime)
     end
 end

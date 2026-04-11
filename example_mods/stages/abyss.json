@@ -5,17 +5,17 @@
 	],
 	"_editorMeta": {
 		"boyfriend": "stik",
-		"dad": "venus",
-		"gf": "malc"
+		"gf": "malc",
+		"dad": "venus"
 	},
+	"girlfriend": [
+		0,
+		155
+	],
 	"stageUI": "normal",
 	"boyfriend": [
 		1225,
 		200
-	],
-	"girlfriend": [
-		0,
-		155
 	],
 	"defaultZoom": 0.95,
 	"objects": [
@@ -42,12 +42,12 @@
 			"alpha": 1,
 			"animations": [
 				{
-					"loop": true,
 					"offsets": null,
-					"anim": "idle",
+					"loop": true,
 					"fps": 12,
-					"name": "abyss idle",
-					"indices": []
+					"anim": "idle",
+					"indices": [],
+					"name": "abyss idle"
 				}
 			],
 			"type": "animatedSprite"
@@ -75,12 +75,12 @@
 			"alpha": 1,
 			"animations": [
 				{
-					"loop": true,
 					"offsets": null,
-					"anim": "idle",
+					"loop": true,
 					"fps": 12,
-					"name": "tinyabyss idle",
-					"indices": []
+					"anim": "idle",
+					"indices": [],
+					"name": "tinyabyss idle"
 				}
 			],
 			"type": "animatedSprite"
@@ -108,12 +108,12 @@
 			"alpha": 1,
 			"animations": [
 				{
-					"loop": true,
 					"offsets": null,
-					"anim": "idle",
+					"loop": true,
 					"fps": 12,
-					"name": "house idle",
-					"indices": []
+					"anim": "idle",
+					"indices": [],
+					"name": "house idle"
 				}
 			],
 			"type": "animatedSprite"
@@ -132,15 +132,15 @@
 		565,
 		-100
 	],
-	"camera_speed": 10,
-	"directory": "",
 	"opponent": [
 		360,
 		185
 	],
+	"directory": "",
+	"camera_speed": 10,
+	"hide_girlfriend": false,
 	"camera_opponent": [
 		50,
 		0
-	],
-	"hide_girlfriend": false
+	]
 }

@@ -1,49 +1,49 @@
 {
 	"animations": [
 		{
-			"loop": false,
 			"offsets": [0, 0],
+			"loop": false,
+			"fps": 12,
 			"anim": "idle",
-			"fps": 12,
-			"name": "malc idle",
-			"indices": []
+			"indices": [],
+			"name": "malc idle"
 		},
 		{
-			"loop": false,
 			"offsets": [2, -2],
+			"loop": false,
+			"fps": 12,
 			"anim": "singLEFT",
-			"fps": 12,
-			"name": "malc left",
-			"indices": []
+			"indices": [],
+			"name": "malc left"
 		},
 		{
+			"offsets": [1, 0],
 			"loop": false,
-			"offsets": [0, 0],
+			"fps": 12,
 			"anim": "singDOWN",
-			"fps": 12,
-			"name": "malc down",
-			"indices": []
+			"indices": [],
+			"name": "malc down"
 		},
 		{
+			"offsets": [-2, 0],
 			"loop": false,
-			"offsets": [-3, 0],
+			"fps": 12,
 			"anim": "singUP",
-			"fps": 12,
-			"name": "malc up",
-			"indices": []
+			"indices": [],
+			"name": "malc up"
 		},
 		{
+			"offsets": [-11, 0],
 			"loop": false,
-			"offsets": [-14, 0],
-			"anim": "singRIGHT",
 			"fps": 12,
-			"name": "malc right",
-			"indices": []
+			"anim": "singRIGHT",
+			"indices": [],
+			"name": "malc right"
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
-	"image": "characters/malc",
+	"image": "characters/song-1/malc",
 	"position": [-90, -150],
 	"healthicon": "thegirlslol",
 	"flip_x": false,

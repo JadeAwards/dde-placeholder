@@ -13,7 +13,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 	var noteY:Float = 90;
 	public function new()
 	{
-		title = Language.getPhrase('visuals_menu', 'Visuals Settings');
+		title = 'Visuals Settings';
 		rpcTitle = 'Visuals Settings Menu'; //for Discord Rich Presence
 
 		// for note skins and splash skins
@@ -89,7 +89,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			"What should the Time Bar display?",
 			'timeBarType',
 			STRING,
-			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
+			['Time Left', 'Time Elapsed', 'Disabled']);
 		addOption(option);
 
 		var option:Option = new Option('Flashing Lights',

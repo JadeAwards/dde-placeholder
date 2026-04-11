@@ -49,7 +49,7 @@ class TitleState extends MusicBeatState
 	var credTextShit:Alphabet;
 	var ddeLogo:FlxSprite;
 	
-	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
+	var titleTextColors:Array<FlxColor> = [0xFF000000, 0xFF000000];
 	var titleTextAlphas:Array<Float> = [1, .64];
 
 	var curWacky:Array<String> = [];
@@ -65,7 +65,6 @@ class TitleState extends MusicBeatState
 		if(!initialized)
 		{
 			ClientPrefs.loadPrefs();
-			Language.reloadPhrases();
 		}
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
@@ -85,8 +84,10 @@ class TitleState extends MusicBeatState
 		{
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
-
-		FlxG.mouse.visible = false;
+		
+		FlxG.mouse.visible = true;
+		FlxG.mouse.load("assets/shared/images/cursor.png", 1, 0, 0); //this is a lil easier lol
+		
 		#if FREEPLAY
 		MusicBeatState.switchState(new FreeplayState());
 		#elseif CHARTING
@@ -119,11 +120,14 @@ class TitleState extends MusicBeatState
 		Conductor.bpm = musicBPM;
 
 		logoBl = new FlxSprite(logoPosition.x, logoPosition.y);
-		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+		var logoFrames = Paths.getSparrowAtlas('logoBumpin');
+		if (logoFrames != null) logoBl.frames = logoFrames;
 		logoBl.antialiasing = false;
 
-		logoBl.animation.addByPrefix('static', 'static', 24, false);
-		logoBl.animation.addByPrefix('confirm', 'confirm', 24, false);
+		if (logoBl.frames != null) {
+			logoBl.animation.addByPrefix('static', 'static', 24, false);
+			logoBl.animation.addByPrefix('confirm', 'confirm', 24, false);
+		}
 		logoBl.animation.play('static');
 		logoBl.updateHitbox();
 		logoBl.scale.set(0.95, 0.95);
@@ -138,11 +142,15 @@ class TitleState extends MusicBeatState
 			logoBl.shader = swagShader.shader;
 		}
 		
-		gfDance.frames = Paths.getSparrowAtlas(characterImage);
+		var gfFrames = Paths.getSparrowAtlas(characterImage);
+		if (gfFrames != null) gfDance.frames = gfFrames;
+
 		if(!useIdle)
 		{
-			gfDance.animation.addByIndices('danceLeft', animationName, danceLeftFrames, "", 24, false);
-			gfDance.animation.addByIndices('danceRight', animationName, danceRightFrames, "", 24, false);
+			if (gfDance.frames != null) {
+				gfDance.animation.addByIndices('danceLeft', animationName, danceLeftFrames, "", 24, false);
+				gfDance.animation.addByIndices('danceRight', animationName, danceRightFrames, "", 24, false);
+			}
 			gfDance.animation.play('danceRight');
 		}
 		else
@@ -154,7 +162,8 @@ class TitleState extends MusicBeatState
 
 		var animFrames:Array<FlxFrame> = [];
 		titleText = new FlxSprite(enterPosition.x, enterPosition.y);
-		titleText.frames = Paths.getSparrowAtlas('titleEnter');
+		var enterFrames = Paths.getSparrowAtlas('titleEnter');
+		if (enterFrames != null) titleText.frames = enterFrames;
 		@:privateAccess
 		{
 			titleText.animation.findByPrefix(animFrames, "ENTER IDLE");
@@ -433,10 +442,9 @@ class TitleState extends MusicBeatState
 					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
 				case 2:
-					createCoolText(['Psych Engine by'], 40);
+					createCoolText(['our.team'], 40);
 				case 4:
-					addMoreText('Shadow Mario', 40);
-					addMoreText('Riveren', 40);
+					addMoreText('presents', 40);
 				case 5:
 					deleteCoolText();
 				case 6:
@@ -456,7 +464,7 @@ class TitleState extends MusicBeatState
 				case 14:
 					addMoreText('DDE:');
 				case 15:
-					addMoreText('Place');
+					addMoreText('Place-');
 				case 16:
 					addMoreText('holder'); // credTextShit.text += '\nFunkin';
 

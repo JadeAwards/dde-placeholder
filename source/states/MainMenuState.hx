@@ -11,6 +11,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.effects.FlxFlicker;
 import lime.app.Application;
 import options.OptionsState;
 import states.editors.MasterEditorMenu;
@@ -19,28 +20,27 @@ class MainMenuState extends MusicBeatSubstate
 {
 	public static var psychEngineVersion:String = "1.0.4";
 
-	var buttons:FlxTypedGroup<FlxSprite>;
-	var buttonScale:Float = 1.92;
-	var hoverScaleFactor:Float = 1.1;
-	var hoverScale:Float;
-	var buttonCallbacks:Map<FlxSprite, Void->Void> = new Map();
-	var blackTransition:FlxSprite;
+	var btns:FlxTypedGroup<FlxSprite>;
+	var btnscale:Float = 1.92;
+	var btnCallbacks:Map<FlxSprite, Void->Void> = new Map();
+	var blackTrans:FlxSprite;
 	var transitioning:Bool = false;
 
 	var glombo:FlxSprite;
-	var originalScale:FlxPoint;
+	var ogScale:FlxPoint;
 
-	var stretchSound:FlxSound = null;
+	var stretchSnd:FlxSound = null;
 
 	var dragging:Bool = false;
 	var dragStart:FlxPoint = null;
 	var lastHovered:FlxSprite = null;
 
+	var bg2:FlxSprite;
+
 	override function create()
 	{
 		super.create();
 
-		hoverScale = buttonScale * hoverScaleFactor;
 		FlxG.mouse.visible = true;
 
 		#if MODS_ALLOWED
@@ -54,34 +54,43 @@ class MainMenuState extends MusicBeatSubstate
 
 		persistentUpdate = persistentDraw = true;
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image("menuDesat"));
-		bg.antialiasing = false;
-		bg.scrollFactor.set();
-		bg.updateHitbox();
-		bg.screenCenter();
-		bg.color = 0xFFFDE871;
-		add(bg);
+		var bg1:FlxSprite = new FlxSprite().loadGraphic(Paths.image("menuDesat"));
+		bg1.antialiasing = false;
+		bg1.scrollFactor.set();
+		bg1.updateHitbox();
+		bg1.screenCenter();
+		bg1.color = 0xFFFDE871;
+		add(bg1);
 
-		glombo = new FlxSprite(FlxG.width - 650, FlxG.height / 2 - 525).loadGraphic(Paths.image("menuButtons/glombo"));
+		bg2 = new FlxSprite().loadGraphic(Paths.image("menuDesat"));
+		bg2.antialiasing = false;
+		bg2.scrollFactor.set();
+		bg2.updateHitbox();
+		bg2.screenCenter();
+		bg2.color = 0xFFfd719b;
+		bg2.visible = false;
+		add(bg2);
+
+		glombo = new FlxSprite(FlxG.width - 650, FlxG.height / 2 - 525).loadGraphic(Paths.image("mainmenu/glombo"));
 		glombo.antialiasing = false;
 		glombo.origin.set(glombo.width / 2, glombo.height / 2);
 		glombo.x += glombo.origin.x;
 		glombo.y += glombo.origin.y;
 		add(glombo);
-		originalScale = new FlxPoint(glombo.scale.x, glombo.scale.y);
+		ogScale = new FlxPoint(glombo.scale.x, glombo.scale.y);
 
-		buttons = new FlxTypedGroup<FlxSprite>();
-		add(buttons);
+		btns = new FlxTypedGroup<FlxSprite>();
+		add(btns);
 
-		var atlas = Paths.getSparrowAtlas("menuButtons/menuButtons");
-		var buttonX:Float = 25;
-		var buttonYStart:Float = 5;
-		var buttonSpacing:Float = 180;
+		var btnSpr = Paths.getSparrowAtlas("mainmenu/btns/menuBtn");
+		var btnX:Float = 25;
+		var btnYStart:Float = 5;
+		var btnSpacing:Float = 180;
 
-		addButton(atlas, "play", buttonX, buttonYStart + 0 * buttonSpacing, FreeplayState);
-		var optionsBtn = makeButton(atlas, "confi", buttonX, buttonYStart + 1 * buttonSpacing, function()
+		addButton(btnSpr, "play", btnX, btnYStart + 0 * btnSpacing, FreeplayState);
+		var optionsBtn = makeButton(btnSpr, "confi", btnX, btnYStart + 1 * btnSpacing, function()
 		{
-			startTransition(new OptionsState());
+			startTrans(new OptionsState());
 			OptionsState.onPlayState = false;
 			if (PlayState.SONG != null)
 			{
@@ -90,66 +99,80 @@ class MainMenuState extends MusicBeatSubstate
 				PlayState.stageUI = "normal";
 			}
 		});
-		addButton(atlas, "creds", buttonX, buttonYStart + 2 * buttonSpacing, CreditsState);
-		var exitBtn = makeButton(atlas, "nah", buttonX, buttonYStart + 3 * buttonSpacing, function()
+		addButton(btnSpr, "creds", btnX, btnYStart + 2 * btnSpacing, CreditsState);
+		var exitBtn = makeButton(btnSpr, "nah", btnX, btnYStart + 3 * btnSpacing, function()
 		{
 			Sys.exit(0);
 		});
-		buttons.add(optionsBtn);
-		buttons.add(exitBtn);
+		btns.add(optionsBtn);
+		btns.add(exitBtn);
 
-		addVersionText(12, FlxG.height - 44, "Psych Engine v" + psychEngineVersion);
-		addVersionText(12, FlxG.height - 24, "DDE: Placeholder (" + Application.current.meta.get("version") + ")");
-
-		blackTransition = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		blackTransition.alpha = 1;
-		add(blackTransition);
-
-		FlxTween.tween(blackTransition, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
-	}
-
-	function addVersionText(x:Float, y:Float, text:String):Void
-	{
-		var t:FlxText = new FlxText(x, y, 0, text, 12);
-		t.scrollFactor.set();
-		t.setFormat(Paths.font("upheavtt.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(t);
-	}
-
-	function addButton(atlas:FlxAtlasFrames, frameName:String, x:Float, y:Float, stateClass:Class<FlxState>):Void
-	{
-		var btn = makeButton(atlas, frameName, x, y, function()
+		var wantedBtn:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image("mainmenu/btns/wantedBtn"));
+		wantedBtn.antialiasing = false;
+		wantedBtn.updateHitbox();
+		wantedBtn.x = FlxG.width - (wantedBtn.width * 0.5) - 100;
+		wantedBtn.y = FlxG.height - (wantedBtn.height * 0.5) - 100;
+		wantedBtn.origin.set(wantedBtn.width / 2, wantedBtn.height / 2);
+		wantedBtn.x += wantedBtn.width / 2;
+		wantedBtn.y += wantedBtn.height / 2;
+		wantedBtn.scale.set(0.5, 0.5);
+		btns.add(wantedBtn);
+		btnCallbacks.set(wantedBtn, function()
 		{
-			startTransition(Type.createInstance(stateClass, []));
+			startTrans(new FindTheDevState());
 		});
-		buttons.add(btn);
+
+		var engineVersion:FlxText = new FlxText(12, FlxG.height - 44, 0, "Psych Engine v" + psychEngineVersion, 12);
+		engineVersion.scrollFactor.set();
+		engineVersion.setFormat(Paths.font("upheavtt.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(engineVersion);
+
+		var ddeVersion:FlxText = new FlxText(12, FlxG.height - 24, 0, "DDE: Placeholder (" + Application.current.meta.get("version") + ")", 12);
+		ddeVersion.scrollFactor.set();
+		ddeVersion.setFormat(Paths.font("upheavtt.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(ddeVersion);
+
+		blackTrans = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		blackTrans.alpha = 1;
+		add(blackTrans);
+
+		FlxTween.tween(blackTrans, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
 	}
 
-	function makeButton(atlas:FlxAtlasFrames, frameName:String, x:Float, y:Float, onClick:Void->Void):FlxSprite
+	function addButton(btnSpr:FlxAtlasFrames, frameName:String, x:Float, y:Float, stateClass:Class<FlxState>):Void
+	{
+		var btn = makeButton(btnSpr, frameName, x, y, function()
+		{
+			startTrans(Type.createInstance(stateClass, []));
+		});
+		btns.add(btn);
+	}
+
+	function makeButton(btnSpr:FlxAtlasFrames, frameName:String, x:Float, y:Float, onClick:Void->Void):FlxSprite
 	{
 		var btn = new FlxSprite(x, y);
-		btn.frames = atlas;
+		btn.frames = btnSpr;
 		btn.animation.addByPrefix("idle", frameName, 0, false);
 		btn.animation.play("idle");
 		btn.origin.set(btn.width / 2, btn.height / 2);
 		btn.x += btn.width / 2;
 		btn.y += btn.height / 2;
-		btn.scale.set(buttonScale, buttonScale);
-		btn.setGraphicSize(Std.int(btn.width * buttonScale));
+		btn.scale.set(btnscale, btnscale);
+		btn.setGraphicSize(Std.int(btn.width * btnscale));
 		btn.updateHitbox();
 		btn.antialiasing = false;
 
-		buttonCallbacks.set(btn, onClick);
+		btnCallbacks.set(btn, onClick);
 		return btn;
 	}
 
-	function startTransition(nextState:FlxState):Void
+	function startTrans(nextState:FlxState):Void
 	{
 		if (transitioning)
 			return;
 
 		transitioning = true;
-		FlxTween.tween(blackTransition, {alpha: 1}, 0.5, {ease: FlxEase.quadIn, onComplete: function(_) FlxG.switchState(nextState)});
+		FlxTween.tween(blackTrans, {alpha: 1}, 0.5, {ease: FlxEase.quadIn, onComplete: function(_) FlxG.switchState(nextState)});
 	}
 
 	override function update(elapsed:Float)
@@ -158,7 +181,7 @@ class MainMenuState extends MusicBeatSubstate
 		if (controls.justPressed('debug_1'))
 		{
 			FlxG.mouse.visible = false;
-			startTransition(new MasterEditorMenu());
+			startTrans(new MasterEditorMenu());
 		}
 		#end
 
@@ -170,7 +193,7 @@ class MainMenuState extends MusicBeatSubstate
 		{
 			dragging = true;
 			dragStart = new FlxPoint(mousePos.x, mousePos.y);
-			stretchSound = FlxG.sound.play(Paths.sound('stretch'), 1, true);
+			stretchSnd = FlxG.sound.play(Paths.sound('stretch'), 1, true);
 		}
 
 		if (FlxG.mouse.justReleased && dragging)
@@ -178,36 +201,31 @@ class MainMenuState extends MusicBeatSubstate
 			dragging = false;
 			dragStart = null;
 
-			if (stretchSound != null)
+			if (stretchSnd != null)
 			{
-				stretchSound.stop();
-				stretchSound = null;
+				stretchSnd.stop();
+				stretchSnd = null;
 			}
 
 			FlxG.sound.play(Paths.sound('wobble'));
-			FlxTween.tween(glombo.scale, {x: originalScale.x, y: originalScale.y}, 1, {ease: FlxEase.elasticOut});
+			FlxTween.tween(glombo.scale, {x: ogScale.x, y: ogScale.y}, 1, {ease: FlxEase.elasticOut});
 		}
 
 		if (dragging && dragStart != null)
 		{
-			var deltaX = (mousePos.x - dragStart.x) * 0.01;
-			var deltaY = (mousePos.y - dragStart.y) * 0.01;
-			glombo.scale.x = Math.max(0.1, originalScale.x + deltaX);
-			glombo.scale.y = Math.max(0.1, originalScale.y + deltaY);
+			var deltaX = (dragStart.x - mousePos.x) * 0.01;
+			var deltaY = (dragStart.y - mousePos.y) * 0.01;
+			glombo.scale.x = Math.max(0.1, ogScale.x + deltaX);
+			glombo.scale.y = Math.max(0.1, ogScale.y + deltaY);
 		}
 
-		for (btn in buttons)
+		for (btn in btns)
 		{
 			var isHovered = btn.overlapsPoint(mousePos, true, FlxG.camera);
-			var targetScale = isHovered ? hoverScale : buttonScale;
-			var center = btn.getMidpoint();
-
-			btn.scale.x += (targetScale - btn.scale.x) * 0.15;
-			btn.scale.y += (targetScale - btn.scale.y) * 0.15;
-			btn.setGraphicSize(Math.round(btn.frameWidth * btn.scale.x), Math.round(btn.frameHeight * btn.scale.y));
-			btn.updateHitbox();
-			btn.x = center.x - btn.width / 2;
-			btn.y = center.y - btn.height / 2;
+			var targetScale:Float = isHovered ? btnscale * 1.15 : btnscale;
+			
+			btn.scale.x = FlxMath.lerp(btn.scale.x, targetScale, FlxMath.bound(elapsed * 12, 0, 1));
+			btn.scale.y = FlxMath.lerp(btn.scale.y, targetScale, FlxMath.bound(elapsed * 12, 0, 1));
 
 			if (isHovered && lastHovered != btn)
 			{
@@ -219,17 +237,25 @@ class MainMenuState extends MusicBeatSubstate
 				lastHovered = null;
 			}
 
-			if (isHovered && FlxG.mouse.justPressed && buttonCallbacks.exists(btn))
+			if (isHovered && FlxG.mouse.justPressed && btnCallbacks.exists(btn))
 			{
 				FlxG.sound.play(Paths.sound('confirmMenu'));
-				buttonCallbacks.get(btn)();
+				if (!transitioning)
+				{
+					transitioning = true;
+					FlxFlicker.flicker(bg2, 1, 0.06, false, true, function(_)
+					{
+						transitioning = false;
+						btnCallbacks.get(btn)();
+					});
+				}
 			}
 		}
 
 		if ((FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE) && !transitioning)
 		{
 			FlxG.sound.play(Paths.sound("cancelMenu"));
-			startTransition(new TitleState());
+			startTrans(new TitleState());
 		}
 	}
 }

@@ -1,49 +1,49 @@
 {
 	"animations": [
 		{
-			"offsets": [0, 0],
 			"loop": false,
-			"fps": 12,
+			"offsets": [0, 0],
 			"anim": "idle",
-			"indices": [],
-			"name": "placeholderdude idle"
+			"fps": 12,
+			"name": "placeholderdude idle",
+			"indices": []
 		},
 		{
-			"offsets": [0, 0],
 			"loop": false,
-			"fps": 12,
+			"offsets": [0, 0],
 			"anim": "singLEFT",
-			"indices": [],
-			"name": "placeholderdude left"
+			"fps": 12,
+			"name": "placeholderdude left",
+			"indices": []
 		},
 		{
-			"offsets": [0, 0],
 			"loop": false,
-			"fps": 12,
+			"offsets": [0, 0],
 			"anim": "singDOWN",
-			"indices": [],
-			"name": "placeholderdude down"
+			"fps": 12,
+			"name": "placeholderdude down",
+			"indices": []
 		},
 		{
-			"offsets": [0, 0],
 			"loop": false,
-			"fps": 12,
+			"offsets": [0, 0],
 			"anim": "singUP",
-			"indices": [],
-			"name": "placeholderdude up"
+			"fps": 12,
+			"name": "placeholderdude up",
+			"indices": []
 		},
 		{
-			"offsets": [0, 0],
 			"loop": false,
-			"fps": 12,
+			"offsets": [0, 0],
 			"anim": "singRIGHT",
-			"indices": [],
-			"name": "placeholderdude right"
+			"fps": 12,
+			"name": "placeholderdude right",
+			"indices": []
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
-	"image": "characters/placeholderdude",
+	"image": "characters/placeholder/placeholderdude",
 	"position": [-40, 100],
 	"healthicon": "whitedude",
 	"flip_x": false,

@@ -26,7 +26,7 @@
 		},
 		{
 			"loop": false,
-			"offsets": [-282, -333],
+			"offsets": [-282, -332],
 			"anim": "singUP",
 			"fps": 24,
 			"name": "pissfriend up",
@@ -34,21 +34,21 @@
 		},
 		{
 			"offsets": [-289, -330],
-			"indices": [],
+			"loop": true,
 			"fps": 24,
 			"anim": "idle",
-			"loop": true,
+			"indices": [],
 			"name": "pissfriend idle"
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
-	"image": "characters/pissfriend",
-	"position": [120, 510],
+	"image": "characters/the-necessary/pissfriend",
+	"position": [-160, 240],
 	"healthicon": "placeholderbf",
 	"flip_x": true,
 	"healthbar_colors": [179, 173, 182],
-	"camera_position": [0, 70],
+	"camera_position": [-300, 390],
 	"sing_duration": 4,
 	"scale": 1.2,
 	"_editor_isPlayer": true

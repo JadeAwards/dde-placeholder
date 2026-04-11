@@ -2,8 +2,8 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="DDE: Placeholder" file="DDEP" packageName="com.shadowmario.psychengine"
-		package="com.shadowmario.psychengine" main="Main" version="DDE MODJAM" company="ShadowMario" />
+	<app title="DDE: Placeholder" file="Placeholder" packageName="com.ourteam.placeholder"
+		package="com.ourteam.placeholder" main="Main" version="V1/DDE MODJAM HOTFIX" company="our.team" />
 
 	<!--Switch
 	Export with Unique ApplicationID and Icon-->
@@ -30,7 +30,6 @@
 	<define name="HSCRIPT_ALLOWED" if="desktop" />
 	<define name="LUA_ALLOWED" if="desktop" />
 	<define name="DISCORD_ALLOWED" />
-	<define name="TRANSLATIONS_ALLOWED" />
 	<define name="IRIS_DEBUG" />
 
 	<define name="MULTITHREADED_LOADING" /> <!-- UNCOMMENTING THIS LINE WILL ENABLE MULTITHREADED
@@ -88,13 +87,6 @@
 	<assets path="assets/videos" if="VIDEOS_ALLOWED" />
 	<assets path="assets/songs" exclude="*.ogg" if="web" />
 	<assets path="assets/songs" exclude="*.mp3" unless="web" />
-	<assets path="assets/week_assets" rename="assets" exclude="*.ogg" if="web" />
-	<assets path="assets/week_assets" rename="assets" exclude="*.mp3" unless="web" />
-
-	<section if="TRANSLATIONS_ALLOWED">
-		<assets path="assets/translations" rename="assets" exclude="*.ogg" if="web" />
-		<assets path="assets/translations" rename="assets" exclude="*.mp3" unless="web" />
-	</section>
 
 	<define name="CHECK_FOR_UPDATES" if="desktop officialBuild" />
 
@@ -102,7 +94,6 @@
 		<assets path='example_mods' rename='mods' embed='false' type='template' unless="mac" />
 		<assets path='example_mods' rename='mods' embed='false' if="mac" />
 	</section>
-	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 
 	<!-- OpenAL config -->
 	<section if="desktop">
@@ -115,7 +106,6 @@
 	<haxelib name="flixel" version="5.6.1" />
 	<haxelib name="flixel-addons" version="3.2.2" />
 	<haxelib name="tjson" version="1.4.0" />
-	<haxelib name="flixel-screenshot-plugin" />
 
 	<!--Psych
 	stuff needed-->
@@ -207,10 +197,10 @@
 
 	<!-- _________________________________ Custom _______________________________ -->
 
-	<assets path='art/icons/iconOG.png' rename='icon.png' if="linux || mac" />
+	<assets path='art/iconOG.png' rename='icon.png' if="linux || mac" />
 
-	<icon path="art/icons/icon16.png" size='16' />
-	<icon path="art/icons/icon32.png" size='32' />
-	<icon path="art/icons/icon64.png" size='64' />
-	<icon path="art/icons/iconOG.png" />
+	<icon path="art/icon16.png" size='16' />
+	<icon path="art/icon32.png" size='32' />
+	<icon path="art/icon64.png" size='64' />
+	<icon path="art/iconOG.png" />
 </project>

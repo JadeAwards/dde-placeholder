@@ -1,9 +1,9 @@
 local allowHunglings = false
+local spawnCount = 0
 local hunglings = {}
 local jungries = {}
-local screenWidth = 1400
-local spawnTimer = 0
-local spawnInterval = 4
+local spawnTmr = 0
+local spawnInt = 4
 local startXLeft = -200
 local startXRight = 1500
 local baseY = 560
@@ -22,168 +22,115 @@ function onCreate()
     makeLuaSprite('blackOverlay', '', 0, 0)
     makeGraphic('blackOverlay', 1280, 720, '000000')
     setObjectCamera('blackOverlay', 'other')
-    setProperty('blackOverlay.alpha', 0)
+    setProperty('blackOverlay.alpha', 1)
+    setProperty('defaultCamZoom', 3.0)
+    setProperty('camGame.zoom', 3.0)
     addLuaSprite('blackOverlay', true)
 end
 
 function onUpdate(elapsed)
-    if allowHunglings then
-        for _, h in ipairs(hunglings) do
-            local newX = getProperty(h.id .. '.x') + h.speed * elapsed
-            setProperty(h.id .. '.x', newX)
-            if h.speed > 0 and newX > screenWidth + 200 or h.speed < 0 and newX < -200 then
-                removeLuaSprite(h.id, true)
-                h.remove = true
-            end
-        end
-        for _, j in ipairs(jungries) do
-            local newX = getProperty(j.id .. '.x') + j.speed * elapsed
-            setProperty(j.id .. '.x', newX)
-            if j.speed > 0 and newX > screenWidth + 200 or j.speed < 0 and newX < -200 then
-                removeLuaSprite(j.id, true)
-                j.remove = true
-            end
-        end
-        for i = #hunglings, 1, -1 do
-            if hunglings[i].remove then
-                table.remove(hunglings, i)
-            end
-        end
-        for i = #jungries, 1, -1 do
-            if jungries[i].remove then
-                table.remove(jungries, i)
-            end
-        end
-        spawnTimer = spawnTimer + elapsed
-        if spawnTimer >= spawnInterval then
-            spawnTimer = 0
-            spawnHungling()
-            if math.random() < 0.4 then
-                spawnHungling()
-            end
-            if math.random() < 0.25 then
-                spawnJungry()
-            end
+    if not allowHunglings then return end
+
+    spawnTmr = spawnTmr + elapsed
+    if spawnTmr >= spawnInt then
+        spawnTmr = 0
+        spawnHungling()
+        if math.random() < 0.4 then spawnHungling() end
+        if math.random() < 0.25 then spawnJungry() end
+    end
+
+    moveAndCleanup(hunglings, elapsed)
+    moveAndCleanup(jungries, elapsed)
+end
+
+function moveAndCleanup(list, elapsed)
+    for i = #list, 1, -1 do
+        local item = list[i]
+        local tag = item.tag
+        local speed = item.speed
+        local x = getProperty(tag .. '.x')
+        
+        setProperty(tag .. '.x', x + speed * elapsed)
+
+        if (speed > 0 and x > startXRight + 100) or (speed < 0 and x < startXLeft - 100) then
+            removeLuaSprite(tag, true)
+            table.remove(list, i)
         end
     end
 end
 
 function spawnHungling()
-    local type = (math.random(1, 2) == 1) and 'hungling1' or 'hungling2'
-    local cloneId = type .. '_clone' .. tostring(math.random(10000, 99999))
-    local goingRight = math.random(1, 2) == 1
-    local startX = goingRight and startXLeft or startXRight
-    local direction = goingRight and 1 or -1
-
-    makeAnimatedLuaSprite(cloneId, type, startX, baseY)
-    if type == 'hungling1' then
-        addAnimationByPrefix(cloneId, 'move', 'hungling1 jump', 12, true)
-    else
-        addAnimationByPrefix(cloneId, 'move', 'hungling2 eatatakirun', 12, true)
-    end
-    objectPlayAnimation(cloneId, 'move', true)
-    setProperty(cloneId .. '.antialiasing', false)
-    if not goingRight then
-        setProperty(cloneId .. '.flipX', true)
-    end
-    local scale = 0.9 + math.random() * 0.2
-    scaleObject(cloneId, scale, scale)
-    local maxOrder = math.max(getObjectOrder('gfGroup') or 20, getObjectOrder('stage') or 0)
-    setObjectOrder(cloneId, maxOrder + 1)
-    addLuaSprite(cloneId, false)
-
-    table.insert(hunglings, {
-        id = cloneId,
-        speed = math.random(160, 320) * direction
-    })
+    local type = (math.random(1, 100) <= 50) and 'hungling1' or 'hungling2'
+    local anim = (type == 'hungling1') and 'hungling1 jump' or 'hungling2 eatatakirun'
+    setupEntity(type, anim, hunglings, math.random(160, 320), 577)
 end
 
 function spawnJungry()
-    local cloneId = 'jungry_clone' .. tostring(math.random(10000, 99999))
-    local goingRight = math.random(1, 2) == 1
-    local startX = goingRight and startXLeft or startXRight
-    local direction = goingRight and 1 or -1
+    setupEntity('Jungry', 'Jungry', jungries, math.random(120, 240), 623)
+end
 
-    makeAnimatedLuaSprite(cloneId, 'Jungry', startX, baseY)
-    addAnimationByPrefix(cloneId, 'move', 'Jungry', 12, true)
-    objectPlayAnimation(cloneId, 'move', true)
-    setProperty(cloneId .. '.antialiasing', false)
-    if not goingRight then
-        setProperty(cloneId .. '.flipX', true)
+function setupEntity(tagPrefix, anim, list, speedBase, yPos)
+    local rightChungus = math.random(1, 100) <= 50
+    local startX = (rightChungus and startXLeft or startXRight) + math.random(-50, 50)
+    local dir = rightChungus and 1 or -1
+    
+    local tag = tagPrefix .. '_ent_' .. spawnCount
+    spawnCount = spawnCount + 1
+
+    makeAnimatedLuaSprite(tag, tagPrefix, startX, yPos)
+    addAnimationByPrefix(tag, 'move', anim, 12, true)
+    objectPlayAnimation(tag, 'move', true)
+    
+    setProperty(tag .. '.antialiasing', false)
+    setProperty(tag .. '.flipX', not rightChungus)
+    setObjectCamera(tag, 'game')
+    scaleObject(tag, 0.7, 0.7)
+
+    addLuaSprite(tag, false)
+    local gfOrder = getObjectOrder('gfGroup')
+    if gfOrder > 0 then
+        setObjectOrder(tag, gfOrder - 1)
     end
-    local scale = 1.0 + (math.random() * 0.2 - 0.1)
-    scaleObject(cloneId, scale, scale)
-    local maxOrder = math.max(getObjectOrder('gfGroup') or 20, getObjectOrder('stage') or 0)
-    setObjectOrder(cloneId, maxOrder + 1)
-    addLuaSprite(cloneId, false)
 
-    table.insert(jungries, {
-        id = cloneId,
-        speed = math.random(120, 240) * direction
-    })
+    table.insert(list, {tag = tag, speed = speedBase * dir})
 end
 
 function onStepHit()
-    if curStep == 64 or curStep == 128 or curStep == 192 or curStep == 256 or curStep == 1856 or curStep == 1920 then
-        setProperty('defaultCamZoom', 1.65)
-        runTimer('zoomHold', 2)
-    elseif curStep == 80 or curStep == 144 or curStep == 208 or curStep == 272 or curStep == 1872 or curStep == 1936 then
-        setProperty('defaultCamZoom', 1.75)
-        runTimer('zoomHold', 2)
-    elseif curStep == 96 or curStep == 160 or curStep == 224 or curStep == 288 or curStep == 1888 or curStep == 1952 then
-        setProperty('defaultCamZoom', 1.85)
-        runTimer('zoomHold', 2)
-    elseif curStep == 112 or curStep == 176 or curStep == 240 or curStep == 304 or curStep == 1904 or curStep == 1968 then
-        setProperty('defaultCamZoom', 2.05)
-        runTimer('zoomHold', 2)
-    elseif curStep == 320 then
+    if (curStep == 320) then
         allowHunglings = true
+    end
+
+    if curStep == 1 then
+        local dur = (stepCrochet * 64) / 1000
+        doTweenAlpha('black', 'blackOverlay', 0, dur, 'linear')
+        doTweenZoom('introZoomOut', 'camGame', 1.5, dur, 'linear')
+    elseif curStep == 64 then
         setProperty('defaultCamZoom', 1.5)
-        runTimer('zoomHold', 2)
-    elseif curStep == 576 or curStep == 608 or curStep == 640 or curStep == 672 or curStep == 704 or curStep == 736 or
-        curStep == 768 or curStep == 800 or curStep == 1472 or curStep == 1504 or curStep == 1568 or curStep == 1600 or
-        curStep == 1632 or curStep == 1664 or curStep == 1696 then
-        fadeOverlay(0.4, 0.9)
-        setProperty('defaultCamZoom', 1.75)
-        runTimer('zoomHold', 1)
-    elseif curStep == 832 or curStep == 1728 or curStep == 1792 then
-        fadeOverlay(0, 0.9)
-    elseif curStep == 944 then
-        setProperty('defaultCamZoom', 1.75)
-        runTimer('zoomHold', 1)
-    elseif curStep == 951 then
-        setProperty('defaultCamZoom', 1.85)
-        runTimer('zoomHold', 1)
-    elseif curStep == 956 then
-        setProperty('defaultCamZoom', 2)
-        runTimer('zoomHold', 1)
-    elseif curStep == 960 then
-        setProperty('defaultCamZoom', 1.5)
-        runTimer('zoomHold', 1)
+    elseif curStep == 184 or curStep == 312 then
+        doTweenAlpha('black', 'blackOverlay', 0.6, 0.7, 'linear')
+        doTweenZoom('zoomIn', 'camGame', 2, 0.7, 'linear')
+    elseif curStep == 192 or curStep == 320 then
+        doTweenAlpha('black', 'blackOverlay', 0, 1, 'linear')
+        doTweenZoom('zoomOut', 'camGame', 1.5, 0.7, 'cubeOut')
+        cameraFlash('game', 'FFFFFF', 1, true)
+    elseif curStep == 576 then
+        doTweenAlpha('black', 'blackOverlay', 0.6, 0.7, 'linear')
+        cameraFlash('game', 'FFFFFF', 1, true)
+    elseif curStep == 832 then
+        doTweenAlpha('black', 'blackOverlay', 0, 0.7, 'linear')
+        cameraFlash('game', 'FFFFFF', 1, true)
+        cameraShake('game', 0.005, 0.35)
     elseif curStep == 1216 then
-        fadeOverlay(0.4, 0.9)
-    elseif curStep == 1471 then
-        fadeOverlay(0.4, 0.9)
-    elseif curStep == 1776 then
-        fadeOverlay(0.4, 0.9)
+        doTweenAngle('camReturn', 'camGame', 0, 0.6, 'cubeOut')
+        doTweenAlpha('black', 'blackOverlay', 0.6, 0.7, 'linear')
+    elseif curStep == 1472 then
+        doTweenAngle('camReturn', 'camGame', 0, 0.6, 'cubeOut')
+        doTweenAlpha('black', 'blackOverlay', 0, 0.7, 'linear')
+    elseif curStep == 1728 then
+        doTweenAlpha('black', 'blackOverlay', 0.6, 0.7, 'linear')
+    elseif curStep == 1856 then
+        doTweenAlpha('black', 'blackOverlay', 0, 0.7, 'linear')
     elseif curStep == 1984 then
-        setProperty('defaultCamZoom', 1.5)
-        runTimer('zoomHold', 2)
-    end
-end
-
-function onTimerCompleted(tag, loops, loopsLeft)
-    if tag == 'zoomHold' then
-        setProperty('defaultCamZoom', 1.5)
-    end
-end
-
-function fadeOverlay(targetAlpha, duration)
-    doTweenAlpha('fadeBlack', 'blackOverlay', targetAlpha, duration, 'linear')
-end
-
-function onSpawnNote(i)
-    if not getPropertyFromGroup('notes', i, 'mustPress') then
-        setPropertyFromGroup('notes', i, 'multSpeed', 1.71)
+        doTweenAlpha('black', 'blackOverlay', 1, 0.01, 'linear')
     end
 end

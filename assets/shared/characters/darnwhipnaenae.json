@@ -1,0 +1,23 @@
+{
+	"animations": [
+		{
+			"loop": true,
+			"offsets": [0, 0],
+			"anim": "whipnaenae",
+			"fps": 24,
+			"name": "whipnaenae",
+			"indices": []
+		}
+	],
+	"vocals_file": "",
+	"no_antialiasing": true,
+	"image": "characters/the-necessary/darnwhipnaenae",
+	"position": [370, 640],
+	"healthicon": "darn",
+	"flip_x": false,
+	"healthbar_colors": [148, 255, 0],
+	"camera_position": [-330, 70],
+	"sing_duration": 4,
+	"scale": 0.5,
+	"_editor_isPlayer": false
+}

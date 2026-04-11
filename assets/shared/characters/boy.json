@@ -1,87 +1,87 @@
 {
 	"animations": [
 		{
-			"loop": false,
 			"offsets": [195, 108],
+			"loop": false,
+			"fps": 12,
 			"anim": "idle",
-			"fps": 12,
-			"name": "boy idle",
-			"indices": []
+			"indices": [],
+			"name": "boy idle"
 		},
 		{
+			"offsets": [192, 107],
 			"loop": false,
-			"offsets": [189, 108],
+			"fps": 12,
 			"anim": "singLEFT",
-			"fps": 12,
-			"name": "boy left",
-			"indices": []
+			"indices": [],
+			"name": "boy left"
 		},
 		{
-			"loop": false,
 			"offsets": [192, 104],
+			"loop": false,
+			"fps": 12,
 			"anim": "singDOWN",
-			"fps": 12,
-			"name": "boy down",
-			"indices": []
+			"indices": [],
+			"name": "boy down"
 		},
 		{
+			"offsets": [195, 111],
 			"loop": false,
-			"offsets": [196, 116],
+			"fps": 12,
 			"anim": "singUP",
-			"fps": 12,
-			"name": "boy up",
-			"indices": []
+			"indices": [],
+			"name": "boy up"
 		},
 		{
+			"offsets": [193, 106],
 			"loop": false,
-			"offsets": [192, 106],
+			"fps": 12,
 			"anim": "singRIGHT",
-			"fps": 12,
-			"name": "boy right",
-			"indices": []
+			"indices": [],
+			"name": "boy right"
 		},
 		{
+			"offsets": [195, 110],
 			"loop": false,
-			"offsets": [188, 114],
+			"fps": 12,
 			"anim": "singLEFTmiss",
-			"fps": 12,
-			"name": "boy 1miss",
-			"indices": []
+			"indices": [],
+			"name": "boy 1miss"
 		},
 		{
+			"offsets": [193, 108],
 			"loop": false,
-			"offsets": [193, 109],
+			"fps": 12,
 			"anim": "singRIGHTmiss",
-			"fps": 12,
-			"name": "boy 3miss",
-			"indices": []
+			"indices": [],
+			"name": "boy 3miss"
 		},
 		{
+			"offsets": [196, 111],
 			"loop": false,
-			"offsets": [199, 117],
+			"fps": 12,
 			"anim": "singUPmiss",
-			"fps": 12,
-			"name": "boy 4miss",
-			"indices": []
+			"indices": [],
+			"name": "boy 4miss"
 		},
 		{
+			"offsets": [191, 105],
 			"loop": false,
-			"offsets": [190, 106],
-			"anim": "singDOWNmiss",
 			"fps": 12,
-			"name": "boy 2miss",
-			"indices": []
+			"anim": "singDOWNmiss",
+			"indices": [],
+			"name": "boy 2miss"
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
-	"image": "characters/boy",
-	"position": [-520, 390],
+	"image": "characters/placeholder/boy",
+	"position": [-760, 260],
 	"healthicon": "placeholderbf",
 	"flip_x": true,
 	"healthbar_colors": [179, 173, 182],
-	"camera_position": [-300, -10],
+	"camera_position": [-600, 210],
 	"sing_duration": 6.1,
-	"scale": 0.5,
+	"scale": 0.4,
 	"_editor_isPlayer": true
 }

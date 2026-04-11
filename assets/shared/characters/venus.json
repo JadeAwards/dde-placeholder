@@ -1,49 +1,49 @@
 {
 	"animations": [
 		{
-			"loop": false,
 			"offsets": [0, 0],
+			"loop": false,
+			"fps": 12,
 			"anim": "idle",
-			"fps": 12,
-			"name": "venus idle",
-			"indices": []
+			"indices": [],
+			"name": "venus idle"
 		},
 		{
-			"loop": false,
 			"offsets": [0, 0],
+			"loop": false,
+			"fps": 12,
 			"anim": "singLEFT",
-			"fps": 12,
-			"name": "venus left",
-			"indices": []
+			"indices": [],
+			"name": "venus left"
 		},
 		{
-			"loop": false,
 			"offsets": [0, 0],
+			"loop": false,
+			"fps": 12,
 			"anim": "singDOWN",
-			"fps": 12,
-			"name": "venus down",
-			"indices": []
+			"indices": [],
+			"name": "venus down"
 		},
 		{
-			"loop": false,
 			"offsets": [0, 0],
-			"anim": "singUP",
+			"loop": false,
 			"fps": 12,
-			"name": "venus up",
-			"indices": []
+			"anim": "singUP",
+			"indices": [],
+			"name": "venus up"
 		},
 		{
-			"loop": false,
 			"offsets": [-2, 3],
-			"anim": "singRIGHT",
+			"loop": false,
 			"fps": 12,
-			"name": "venus right",
-			"indices": []
+			"anim": "singRIGHT",
+			"indices": [],
+			"name": "venus right"
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
-	"image": "characters/venus",
+	"image": "characters/song-1/venus",
 	"position": [-450, -160],
 	"healthicon": "thegirlslol",
 	"flip_x": false,

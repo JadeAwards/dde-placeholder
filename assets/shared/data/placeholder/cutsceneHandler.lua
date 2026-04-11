@@ -2,9 +2,11 @@ local allowCountdown = false
 
 function onStartCountdown()
     if not allowCountdown then
-        startVideo('placeholdercutscene')
+        setProperty('blackOverlay.visible', false)
+        startVideo('placeholder')
         allowCountdown = true
         return Function_Stop
     end
+    setProperty('blackOverlay.visible', true)
     return Function_Continue
 end

@@ -87,7 +87,7 @@ class Alphabet extends FlxSpriteGroup
 		clearLetters();
 		createLetters(newText);
 		updateAlignment();
-		this.text = newText;
+		@:bypassAccessor text = newText;
 		return newText;
 	}
 
@@ -190,6 +190,8 @@ class Alphabet extends FlxSpriteGroup
 
 	private function createLetters(newText:String)
 	{
+		if (AlphaCharacter.allLetters == null) AlphaCharacter.loadAlphabetData();
+
 		var consecutiveSpaces:Int = 0;
 
 		var xPos:Float = 0;
@@ -412,20 +414,23 @@ class AlphaCharacter extends FlxSprite
 	{
 		if(frames == null) //first setup
 		{
-			image = name;
+			@:bypassAccessor image = name;
 			frames = Paths.getSparrowAtlas(name);
 			return name;
 		}
 
 		var lastAnim:String = null;
-		if (animation != null)
+		if (animation != null && animation.curAnim != null)
 		{
-			lastAnim = animation.name;
+			lastAnim = animation.curAnim.name;
 		}
-		image = name;
+		@:bypassAccessor image = name;
 		frames = Paths.getSparrowAtlas(name);
-		this.scale.x = parent.scaleX;
-		this.scale.y = parent.scaleY;
+		if(parent != null)
+		{
+			this.scale.x = parent.scaleX;
+			this.scale.y = parent.scaleY;
+		}
 		alignOffset = 0;
 		
 		if (lastAnim != null)

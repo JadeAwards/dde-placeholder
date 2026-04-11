@@ -102,16 +102,6 @@ class VSlice
 		{
 			case 'mainStage':
 				stage = 'stage';
-			case 'spookyMansion':
-				stage = 'spooky';
-			case 'phillyTrain':
-				stage = 'philly';
-			case 'limoRide':
-				stage = 'limo';
-			case 'mallXmas':
-				stage = 'mall';
-			case 'tankmanBattlefield':
-				stage = 'tank';
 		}
 		var lastNoteTime:Float = 0;
 		var notesMap:Map<String, Dynamic> = [];
@@ -402,7 +392,7 @@ class VSlice
 		}
 		else
 		{
-			var diff:String = Difficulty.getString(false);
+			var diff:String = Difficulty.getString();
 			if(diff == null) diff = Difficulty.getDefault();
 			diff = Paths.formatToSongPath(diff);
 			
@@ -424,16 +414,6 @@ class VSlice
 		{
 			case 'stage':
 				stage = 'mainStage';
-			case 'spooky':
-				stage = 'spookyMansion';
-			case 'philly':
-				stage = 'phillyTrain';
-			case 'limo':
-				stage = 'limoRide';
-			case 'mall':
-				stage = 'mallXmas';
-			case 'tank':
-				stage = 'tankmanBattlefield';
 		}
 		var metadata:VSliceMetadata = {
 			songName: songData.song,

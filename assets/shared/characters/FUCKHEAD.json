@@ -2,7 +2,7 @@
 	"animations": [
 		{
 			"loop": false,
-			"offsets": [52, -6],
+			"offsets": [62, -6],
 			"anim": "singRIGHT-alt",
 			"fps": 12,
 			"name": "FUCKHEAD right alt",
@@ -42,7 +42,7 @@
 		},
 		{
 			"loop": false,
-			"offsets": [3, 2],
+			"offsets": [3, -2],
 			"anim": "singDOWN",
 			"fps": 12,
 			"name": "FUCKHEAD down0",
@@ -66,21 +66,21 @@
 		},
 		{
 			"offsets": [0, 0],
-			"indices": [],
+			"loop": true,
 			"fps": 12,
 			"anim": "idle",
-			"loop": true,
+			"indices": [],
 			"name": "FUCKHEAD idle"
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
-	"image": "characters/FUCKHEAD",
+	"image": "characters/the-necessary/FUCKHEAD",
 	"position": [0, 540],
 	"healthicon": "darn",
 	"flip_x": false,
 	"healthbar_colors": [148, 255, 0],
-	"camera_position": [-130, 0],
+	"camera_position": [-140, 0],
 	"sing_duration": 4,
 	"scale": 1,
 	"_editor_isPlayer": false

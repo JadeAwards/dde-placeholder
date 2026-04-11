@@ -14,24 +14,22 @@ import flixel.util.FlxColor;
 
 class FreeplayState extends MusicBeatState
 {
-	var freeplayButtons:FlxTypedGroup<FlxSprite>;
+	var btns:FlxTypedGroup<FlxSprite>;
 	var icons:FlxTypedGroup<FlxSprite>;
-	var buttonScale:Float = 1.12;
-	var hoverScaleFactor:Float = 1.1;
-	var hoverScale:Float;
-	var buttonCallbacks:Map<FlxSprite, Void->Void> = new Map();
-	var blackTransition:FlxSprite;
+	var btnscale:Float = 1;
+	var btnCallbacks:Map<FlxSprite, Void->Void> = new Map();
+	var blackTrans:FlxSprite;
 	var transitioning:Bool = false;
-	var lastHovered:FlxSprite = null;
 
 	var bg:FlxSprite;
-	var bgColors:Array<Int> = [0xFF99E550, FlxColor.WHITE, 0xFFD1D1D1];
+	var bgClrs:Array<Int> = [0xFF99E550, FlxColor.WHITE, 0xFFD1D1D1];
+	var lastHovered:FlxSprite = null;
+	var colorTwn:FlxTween;
 
 	override function create()
 	{
 		super.create();
 
-		hoverScale = buttonScale * hoverScaleFactor;
 		FlxG.mouse.visible = true;
 
 		#if DISCORD_ALLOWED
@@ -45,54 +43,54 @@ class FreeplayState extends MusicBeatState
 		bg.scrollFactor.set();
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.color = bgColors[0];
+		bg.color = bgClrs[0];
 		add(bg);
 
-		freeplayButtons = new FlxTypedGroup<FlxSprite>();
+		btns = new FlxTypedGroup<FlxSprite>();
 		icons = new FlxTypedGroup<FlxSprite>();
-		add(freeplayButtons);
+		add(btns);
 		add(icons);
 
-		var atlas = Paths.getSparrowAtlas("menuButtons/freeplayButtons");
-		var buttonX:Float = 190;
-		var buttonYStart:Float = 90;
-		var buttonSpacing:Float = 180;
+		var btnSpr = Paths.getSparrowAtlas("mainmenu/btns/freeplayBtn");
+		var btnX:Float = 190;
+		var btnYStart:Float = 90;
+		var btnSpacing:Float = 180;
 
-		addButton(atlas, "the-necessary", buttonX, buttonYStart + 0 * buttonSpacing, function()
+		addButton(btnSpr, "the-necessary", btnX, btnYStart + 0 * btnSpacing, function()
 		{
 			PlayState.SONG = Song.loadFromJson("the-necessary", "the-necessary");
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = 1;
-			startTransition(new PlayState());
+			startTrans(new PlayState());
 		}, "icon-darn");
 
-		addButton(atlas, "placeholder", buttonX, buttonYStart + 1 * buttonSpacing, function()
+		addButton(btnSpr, "placeholder", btnX, btnYStart + 1 * btnSpacing, function()
 		{
 			PlayState.SONG = Song.loadFromJson("placeholder", "placeholder");
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = 1;
-			startTransition(new PlayState());
+			startTrans(new PlayState());
 		}, "icon-whitedude");
 
-		addButton(atlas, "song-1", buttonX, buttonYStart + 2 * buttonSpacing, function()
+		addButton(btnSpr, "song-1", btnX, btnYStart + 2 * btnSpacing, function()
 		{
 			PlayState.SONG = Song.loadFromJson("song-1", "song-1");
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = 1;
-			startTransition(new PlayState());
+			startTrans(new PlayState());
 		}, "icon-thegirlslol");
 
-		blackTransition = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		blackTransition.alpha = 1;
-		add(blackTransition);
+		blackTrans = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		blackTrans.alpha = 1;
+		add(blackTrans);
 
-		FlxTween.tween(blackTransition, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
+		FlxTween.tween(blackTrans, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
 	}
 
-	function addButton(atlas:FlxAtlasFrames, frameName:String, x:Float, y:Float, onClick:Void->Void, iconName:String):Void
+	function addButton(btnSpr:FlxAtlasFrames, frameName:String, x:Float, y:Float, onClick:Void->Void, iconName:String):Void
 	{
-		var btn = makeButton(atlas, frameName, x, y, onClick);
-		freeplayButtons.add(btn);
+		var btn = makeButton(btnSpr, frameName, x, y, onClick);
+		btns.add(btn);
 
 		var icon = new FlxSprite(btn.x + btn.width + 20, btn.y);
 		icon.loadGraphic(Paths.image("icons/" + iconName));
@@ -101,33 +99,41 @@ class FreeplayState extends MusicBeatState
 		icon.updateHitbox();
 		icon.clipRect = new FlxRect(0, 0, 150, 150);
 		icons.add(icon);
+
+		if (iconName == "icon-darn") // funny capcut icon
+		{
+			FlxTween.tween(icon.scale, {x: 1.2}, 0.35, {ease: FlxEase.quadInOut, type: PINGPONG});
+			FlxTween.tween(icon.scale, {y: 0.7}, 0.32, {ease: FlxEase.quadInOut, type: PINGPONG});
+
+			FlxTween.angle(icon, -8, 8, 2, {ease: FlxEase.quadInOut, type: PINGPONG});
+		}
 	}
 
-	function makeButton(atlas:FlxAtlasFrames, frameName:String, x:Float, y:Float, onClick:Void->Void):FlxSprite
+	function makeButton(btnSpr:FlxAtlasFrames, frameName:String, x:Float, y:Float, onClick:Void->Void):FlxSprite
 	{
 		var btn = new FlxSprite(x, y);
-		btn.frames = atlas;
+		btn.frames = btnSpr;
 		btn.animation.addByPrefix("idle", frameName, 0, false);
 		btn.animation.play("idle");
 		btn.origin.set(btn.width / 2, btn.height / 2);
 		btn.x += btn.width / 2;
 		btn.y += btn.height / 2;
-		btn.scale.set(buttonScale, buttonScale);
-		btn.setGraphicSize(Std.int(btn.width * buttonScale));
+		btn.scale.set(btnscale, btnscale);
+		btn.setGraphicSize(Std.int(btn.width * btnscale));
 		btn.updateHitbox();
 		btn.antialiasing = false;
 
-		buttonCallbacks.set(btn, onClick);
+		btnCallbacks.set(btn, onClick);
 		return btn;
 	}
 
-	function startTransition(nextState:FlxState):Void
+	function startTrans(nextState:FlxState):Void
 	{
 		if (transitioning)
 			return;
 
 		transitioning = true;
-		FlxTween.tween(blackTransition, {alpha: 1}, 0.5, {
+		FlxTween.tween(blackTrans, {alpha: 1}, 0.5, {
 			ease: FlxEase.quadIn,
 			onComplete: function(_) FlxG.switchState(nextState)
 		});
@@ -140,18 +146,13 @@ class FreeplayState extends MusicBeatState
 		var mousePos = FlxG.mouse.getScreenPosition();
 		var idx = 0;
 
-		for (btn in freeplayButtons)
+		for (btn in btns)
 		{
 			var isHovered = btn.overlapsPoint(mousePos, true, FlxG.camera);
-			var targetScale = isHovered ? hoverScale : buttonScale;
-			var center = btn.getMidpoint();
-
-			btn.scale.x += (targetScale - btn.scale.x) * 0.15;
-			btn.scale.y += (targetScale - btn.scale.y) * 0.15;
-			btn.setGraphicSize(Math.round(btn.frameWidth * btn.scale.x), Math.round(btn.frameHeight * btn.scale.y));
-			btn.updateHitbox();
-			btn.x = center.x - btn.width / 2;
-			btn.y = center.y - btn.height / 2;
+			var targetScale:Float = isHovered ? btnscale * 1.15 : btnscale;
+			
+			btn.scale.x = FlxMath.lerp(btn.scale.x, targetScale, FlxMath.bound(elapsed * 12, 0, 1));
+			btn.scale.y = FlxMath.lerp(btn.scale.y, targetScale, FlxMath.bound(elapsed * 12, 0, 1));
 
 			if (icons.members[idx] != null)
 			{
@@ -163,17 +164,18 @@ class FreeplayState extends MusicBeatState
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				lastHovered = btn;
-				bg.color = bgColors[idx % bgColors.length];
+				if(colorTwn != null) colorTwn.cancel();
+				colorTwn = FlxTween.color(bg, 0.35, bg.color, bgClrs[idx % bgClrs.length], {ease: FlxEase.quartOut});
 			}
 			else if (!isHovered && lastHovered == btn)
 			{
 				lastHovered = null;
 			}
 
-			if (isHovered && FlxG.mouse.justPressed && buttonCallbacks.exists(btn))
+			if (isHovered && FlxG.mouse.justPressed && btnCallbacks.exists(btn))
 			{
 				FlxG.sound.play(Paths.sound('confirmMenu'));
-				buttonCallbacks.get(btn)();
+				btnCallbacks.get(btn)();
 			}
 
 			idx++;
@@ -182,7 +184,7 @@ class FreeplayState extends MusicBeatState
 		if ((FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE) && !transitioning)
 		{
 			FlxG.sound.play(Paths.sound("cancelMenu"));
-			startTransition(new MainMenuState());
+			startTrans(new MainMenuState());
 		}
 	}
 }
